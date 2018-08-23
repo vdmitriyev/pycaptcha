@@ -1,0 +1,9 @@
+.idea/*
+.logs/*
+.images/*
+.captchas/*
+
+__pycache__/
+*.py[cod]
+
+venv/*
