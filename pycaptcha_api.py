@@ -4,6 +4,7 @@ import os
 import uuid
 import codecs
 import random
+import  argparse
 import string
 import datetime
 import logging.config
@@ -99,8 +100,8 @@ def getCaptcha():
         captcha_uri = 'captchas/{0}/{0}.png'.format(captcha_job_id)
         captcha_path_answer = os.path.join(new_captcha_path, captcha_job_id) + '.ans'
 
-        #captcha_text = generate_captcha(captcha_path, add_noise=False)
-        captcha_text = generate_captcha(captcha_path, add_noise=True)
+        captcha_text = generate_captcha(captcha_path, add_noise=False)
+        #captcha_text = generate_captcha(captcha_path, add_noise=True)
 
         # save captcha value
         with open(captcha_path_answer, 'w') as _f_ans:
@@ -169,7 +170,7 @@ def checkCaptcha():
 def generate_captcha(image_path, add_noise = False):
     ''' Generate a captcha and return the solution of the captcha'''
 
-    _captcha_txt = get_random_text(length=5)
+    _captcha_txt = get_random_text(length=4)
 
     _font = ImageFont.truetype("arial.ttf", 40)
     _image = Image.new('RGB', (200, 200), color = (255, 255, 255))
@@ -198,9 +199,57 @@ def add_noise_dots(draw, image):
         draw.point((random.randint(0, size[0]), random.randint(0, size[1])), fill=(0, 0, rand_b))
 
 def get_random_text(length=8):
-    chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
+    #chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
+    chars = string.digits
     return ''.join(random.choice(chars) for x in range(length))
 
+def genrate_training_data():
+    '''Generate training data for the further usage'''
+    print ('[i] Generating a train dataset')
+
+    TRAIN_FOLDER = 'train'
+
+    # create jobs folder
+    if not os.path.exists(TRAIN_FOLDER):
+        os.makedirs(TRAIN_FOLDER)
+
+    #symbols = string.digits + string.ascii_uppercase + string.ascii_lowercase
+    symbols = string.digits
+
+    #'consola.ttf'
+    #font_styles = ['arial.ttf', 'tahoma.ttf', 'times.ttf', 'comic.ttf', 'calibri.ttf']
+    font_styles = ['arial.ttf']
+
+    _fonts = [ImageFont.truetype(x, 40) for x in font_styles]
+    for letter in symbols:
+
+        image_folder = os.path.join(TRAIN_FOLDER, letter)
+
+        # create jobs folder
+        if not os.path.exists(image_folder):
+            os.makedirs(image_folder)
+
+        SAMPLES = 1000
+        # save test data as images
+        for index, font in enumerate(_fonts):
+            for _x in range(SAMPLES):
+                _image_path = os.path.join(image_folder, '{0}-{1}-image.png'.format(index, _x))
+                _image = Image.new('RGB', (50, 50), color = (0, 0, 0))
+                _drawing = ImageDraw.Draw(_image)
+                _drawing.text((12,3), letter, font=font, fill=(255, 255, 255))
+                _image.save(_image_path)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # construct the argument parse and parse the arguments
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-m", "--mode", required=True, help="path to input image")
+    ap.set_defaults(mode='SERVER')
+    args = vars(ap.parse_args())
+
+    if args['mode'].upper() == 'GENERATE':
+        genrate_training_data()
+
+    if args['mode'].upper()     == 'SERVER':
+        app.run(debug=True)
+

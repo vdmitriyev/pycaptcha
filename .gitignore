@@ -2,6 +2,8 @@
 .logs/*
 .images/*
 .captchas/*
+train/*
+train*/*
 
 __pycache__/
 *.py[cod]
