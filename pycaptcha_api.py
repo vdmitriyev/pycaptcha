@@ -229,14 +229,17 @@ def genrate_training_data():
         if not os.path.exists(image_folder):
             os.makedirs(image_folder)
 
-        SAMPLES = 1000
+        SAMPLES = 500
         # save test data as images
         for index, font in enumerate(_fonts):
             for _x in range(SAMPLES):
                 _image_path = os.path.join(image_folder, '{0}-{1}-image.png'.format(index, _x))
-                _image = Image.new('RGB', (50, 50), color = (0, 0, 0))
+                _image = Image.new('RGB', (30, 30), color = (255, 255, 255))
                 _drawing = ImageDraw.Draw(_image)
-                _drawing.text((12,3), letter, font=font, fill=(255, 255, 255))
+                font_width, font_height = font.getsize(letter)
+                font_y_offset = font.getoffset(letter)[1] # <<<< MAGIC!
+                #_drawing.text((0,0), letter, font=font, fill=(255, 255, 255))
+                _drawing.text((4, 0 - font_y_offset+1), letter, font=font, fill=(0, 0, 0))
                 _image.save(_image_path)
 
 if __name__ == '__main__':
