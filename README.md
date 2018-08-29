@@ -15,11 +15,11 @@ N.B Or user "initiateEnv.bat" script.
 Generate dateset with images for further trainings.
 
 ```bash
-python pycaptcha_api.py -mode GENERATE
+python pycaptcha_api.py --mode GENERATE
 ```
 
 Start server.
 
 ```bash
-python pycaptcha_api.py -mode server
+python pycaptcha_api.py --mode server
 ```

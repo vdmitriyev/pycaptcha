@@ -208,6 +208,7 @@ def genrate_training_data():
     print ('[i] Generating a train dataset')
 
     TRAIN_FOLDER = 'train'
+    ADD_NOISE = False
 
     # create jobs folder
     if not os.path.exists(TRAIN_FOLDER):
@@ -236,6 +237,11 @@ def genrate_training_data():
                 _image_path = os.path.join(image_folder, '{0}-{1}-image.png'.format(index, _x))
                 _image = Image.new('RGB', (30, 30), color = (255, 255, 255))
                 _drawing = ImageDraw.Draw(_image)
+
+                if ADD_NOISE:
+                    add_noise_arcs(_drawing, _image)
+                    add_noise_dots(_drawing, _image)
+
                 font_width, font_height = font.getsize(letter)
                 font_y_offset = font.getoffset(letter)[1] # <<<< MAGIC!
                 #_drawing.text((0,0), letter, font=font, fill=(255, 255, 255))
