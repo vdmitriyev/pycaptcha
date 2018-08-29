@@ -253,6 +253,6 @@ if __name__ == '__main__':
     if args['mode'].upper() == 'GENERATE':
         genrate_training_data()
 
-    if args['mode'].upper()     == 'SERVER':
+    if args['mode'].upper() == 'SERVER':
         app.run(debug=True)
 
